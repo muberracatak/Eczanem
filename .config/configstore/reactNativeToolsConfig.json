@@ -8,7 +8,7 @@
 		"daysLeftBeforeSurvey": 29,
 		"surveyName": "userSatisfactionSurvey",
 		"surveyUrl": "https://www.surveymonkey.com/r/6FJGVDV",
-		"lastExtensionUsageDate": "2023-05-02T12:05:13.845Z"
+		"lastExtensionUsageDate": "2023-05-02T12:44:22.013Z"
 	},
 	"tipsConfig": {
 		"daysLeftBeforeGeneralTip": 6,
@@ -46,6 +46,6 @@
 				"networkInspectorLogsColorTheme": {}
 			}
 		},
-		"lastExtensionUsageDate": "2023-05-02T12:05:13.106Z"
+		"lastExtensionUsageDate": "2023-05-02T12:44:21.712Z"
 	}
 }
