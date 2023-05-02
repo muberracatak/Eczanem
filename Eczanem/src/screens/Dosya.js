@@ -1,86 +1,12 @@
-import React, { useState } from 'react';
-import QRCode from 'react-native-qrcode-svg';
-import ImagePicker from 'react-native-image-picker';
-import { Button, Image, View, StyleSheet } from 'react-native';
-import { launchCamera, launchImageLibrary, showImagePicker } from 'react-native-image-picker';
-import ActionButton from 'react-native-action-button';
-import Icon from 'react-native-vector-icons/Ionicons';
+import { View, Text } from 'react-native'
+import React from 'react'
 
-const QRCodeGenerator = () => {
-    const [imageUrl, setImageUrl] = useState(null);
-    const option = {
-        includeBase64: true,
-        storageOptions: {
-            skipBackup: true,
-            path: 'image'
-        },
-        mediaType: 'photo',
-        quality: 1,
-        saveToPhotos: true
-    };
-
-    const selectImage = () => {
-        launchImageLibrary(option, (res) => {
-            if (res.didCancel) {
-                console.log('cancelled image selection')
-            }
-            else {
-                const source = { uri: res.uri };
-                console.log('response', JSON.stringify(res))
-                //setFileData(res.assets[0].base64)
-                setImageUrl(res.assets[0].uri)
-                //setImageSource(res.uri);
-                //setQRCodeValue(res.uri);
-                console.log('id : ', res.assets[0].id)
-                console.log('uri : ', res.assets[0].uri)
-                console.log('fileName : ', res.assets[0].fileName)
-                console.log('fileSize : ', res.assets[0].fileSize)
-                console.log('type : ', res.assets[0].type)
-            }
-        })
-    }
-    const renderQRCode = () => {
-        if (imageUrl) {
-            return <QRCode value={imageUrl} size={200} />;
-        } else {
-            return null;
-        }
-    };
-
+const Dosya = () => {
     return (
         <View>
-            {/*{imageUrl && <Image source={{ uri: imageUrl }} style={{ width: 200, height: 200 }} />}*/}
-            {renderQRCode()}
-            {imageUrl != null ? <AddImage source={{ uri: imageUrl }} /> : null}
-            <ActionButton buttonColor="#2e64e5" style={{ top: 500 }}>
-                <ActionButton.Item
-                    buttonColor="#9b59b6"
-                    title="Fotoğraf Çek"
-                    onPress={selectImage}>
-                    <Icon name="camera-outline" style={styles.actionButtonIcon} />
-                </ActionButton.Item>
-                <ActionButton.Item
-                    buttonColor="#3498db"
-                    title="Fotoğraf albümünden seç"
-                    onPress={selectImage}>
-                    <Icon name="md-images-outline" style={styles.actionButtonIcon} />
-                </ActionButton.Item>
-            </ActionButton>
+            <Text>Dosya</Text>
         </View>
-    );
-};
+    )
+}
 
-export default QRCodeGenerator;
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    actionButtonIcon: {
-        fontSize: 20,
-        height: 22,
-        color: 'white',
-    },
-});
+export default Dosya

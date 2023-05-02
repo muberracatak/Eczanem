@@ -1,154 +1,100 @@
-import React, { useState, useContext } from 'react';
-import {
-    View,
-    Text,
-    Platform,
-    StyleSheet,
-    Alert,
-    ActivityIndicator,
-    TextInput,
-    Button,
-} from 'react-native';
+import React, { useState } from 'react';
+import QRCode from 'react-native-qrcode-svg';
+import ImagePicker from 'react-native-image-picker';
+import { Button, Image, View, StyleSheet } from 'react-native';
+import { launchCamera, launchImageLibrary, showImagePicker } from 'react-native-image-picker';
 import ActionButton from 'react-native-action-button';
 import Icon from 'react-native-vector-icons/Ionicons';
-import ImagePicker from 'react-native-image-picker';
 
-//import storage from '@react-native-firebase/storage';
-//import firestore from '@react-native-firebase/firestore';
-
-
-
-//import { AuthContext } from '../navigation/AuthProvider';
-
-const AddPostScreen = () => {
-    //const { user, logout } = useContext(AuthContext);
-
-    const [image, setImage] = useState(null);
-    const [uploading, setUploading] = useState(false);
-    const [transferred, setTransferred] = useState(0);
-    const [post, setPost] = useState(null);
-
-    const takePhotoFromCamera = () => {
-        ImagePicker.openCamera({
-            width: 1200,
-            height: 780,
-            cropping: true,
-        }).then((image) => {
-            console.log(image);
-            const imageUri = Platform.OS === 'ios' ? image.sourceURL : image.path;
-            setImage(imageUri);
-        });
+const QRCodeGenerator = () => {
+    const [imageUrl, setImageUrl] = useState(null);
+    const [fileData, setFileData] = useState([])
+    const option = {
+        includeBase64: true,
+        storageOptions: {
+            skipBackup: true,
+            path: 'image'
+        },
+        mediaType: 'photo',
+        quality: 1,
+        saveToPhotos: true
     };
+    const openCamera = () => {
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(fileData)
+        };
+        launchCamera(option, (res) => {
+            if (res.didCancel) {
+                console.log('user cancelled')
+            } else if (res.errorCode) {
+                console.log('Image picker error', res.errorMessage)
+            } else {
+                const source = { uri: res.uri };
+                console.log('response', JSON.stringify(res))
+                setFileData(res.assets[0].base64)
+                setFileUri(res.assets[0].uri)
+                console.log('id : ', res.assets[0].id)
+                console.log('uri : ', res.assets[0].uri)
+                console.log('fileName : ', res.assets[0].fileName)
+                console.log('fileSize : ', res.assets[0].fileSize)
+                console.log('type : ', res.assets[0].type)
 
-    const choosePhotoFromLibrary = () => {
-        ImagePicker.openPicker({
-            width: 1200,
-            height: 780,
-            cropping: true,
-        }).then((image) => {
-            console.log(image);
-            const imageUri = Platform.OS === 'ios' ? image.sourceURL : image.path;
-            setImage(imageUri);
-        });
-    };
-
-    const submitPost = async () => {
-        const imageUrl = await uploadImage();
-        console.log('Image Url: ', imageUrl);
-        console.log('Post: ', post);
-
-        firestore()
-            .collection('posts')
-            .add({
-                userId: user.uid,
-                post: post,
-                postImg: imageUrl,
-                postTime: firestore.Timestamp.fromDate(new Date()),
-                likes: null,
-                comments: null,
-            })
-            .then(() => {
-                console.log('Post Added!');
-                Alert.alert(
-                    'Post published!',
-                    'Your post has been published Successfully!',
-                );
-                setPost(null);
-            })
-            .catch((error) => {
-                console.log('Something went wrong with added post to firestore.', error);
-            });
+            }
+        })
     }
+    const selectImage = () => {
+        launchImageLibrary(option, (res) => {
+            if (res.didCancel) {
+                console.log('cancelled image selection')
+            }
+            else {
+                const source = { uri: res.uri };
+                console.log('response', JSON.stringify(res))
+                //setFileData(res.assets[0].base64)
+                setImageUrl(res.assets[0].uri)
+                //setImageSource(res.uri);
+                //setQRCodeValue(res.uri);
+                console.log('id : ', res.assets[0].id)
+                console.log('uri : ', res.assets[0].uri)
+                console.log('fileName : ', res.assets[0].fileName)
+                console.log('fileSize : ', res.assets[0].fileSize)
+                console.log('type : ', res.assets[0].type)
+            }
+        })
+    }
+    const renderQRCode = () => {
+        if (imageUrl) {
+            return (
+                <View style={{ top: 200, left: 90 }}>
+                    <Image style={{ width: 150, height: 150, marginLeft: 2, padding: 2 }} source={{ uri: `data:image/jpeg;base64,` + imageUrl }} />
 
-    const uploadImage = async () => {
-        if (image == null) {
+                    <QRCode value={imageUrl} size={200} />
+                </View>
+
+            )
+                ;
+        } else {
             return null;
         }
-        const uploadUri = image;
-        let filename = uploadUri.substring(uploadUri.lastIndexOf('/') + 1);
-
-        // Add timestamp to File Name
-        const extension = filename.split('.').pop();
-        const name = filename.split('.').slice(0, -1).join('.');
-        filename = name + Date.now() + '.' + extension;
-
-        setUploading(true);
-        setTransferred(0);
-
-        const storageRef = storage().ref(`photos/${filename}`);
-        const task = storageRef.putFile(uploadUri);
-
-        // Set transferred state
-        task.on('state_changed', (taskSnapshot) => {
-            console.log(
-                `${taskSnapshot.bytesTransferred} transferred out of ${taskSnapshot.totalBytes}`,
-            );
-
-            setTransferred(
-                Math.round(taskSnapshot.bytesTransferred / taskSnapshot.totalBytes) *
-                100,
-            );
-        });
-
-        try {
-            await task;
-
-            const url = await storageRef.getDownloadURL();
-
-            setUploading(false);
-            setImage(null);
-
-            // Alert.alert(
-            //   'Image uploaded!',
-            //   'Your image has been uploaded to the Firebase Cloud Storage Successfully!',
-            // );
-            return url;
-
-        } catch (e) {
-            console.log(e);
-            return null;
-        }
-
     };
 
     return (
-        <View style={styles.container}>
-
-            {image != null ? <AddImage source={{ uri: image }} /> : null}
-
-
-
-            <ActionButton buttonColor="#2e64e5">
+        <View>
+            {/*{imageUrl && <Image source={{ uri: imageUrl }} style={{ width: 200, height: 200 }} />}*/}
+            {renderQRCode()}
+            <ActionButton buttonColor="#2e64e5" style={{ top: 500 }}>
                 <ActionButton.Item
                     buttonColor="#9b59b6"
-                    title="Take Photo"
-                    onPress={takePhotoFromCamera}>
+                    title="Fotoğraf Çek"
+                    onPress={openCamera}>
                     <Icon name="camera-outline" style={styles.actionButtonIcon} />
                 </ActionButton.Item>
                 <ActionButton.Item
                     buttonColor="#3498db"
-                    title="Choose Photo"
-                    onPress={choosePhotoFromLibrary}>
+                    title="Fotoğraf albümünden seç"
+                    onPress={selectImage}>
                     <Icon name="md-images-outline" style={styles.actionButtonIcon} />
                 </ActionButton.Item>
             </ActionButton>
@@ -156,7 +102,7 @@ const AddPostScreen = () => {
     );
 };
 
-export default AddPostScreen;
+export default QRCodeGenerator;
 
 const styles = StyleSheet.create({
     container: {

@@ -43,9 +43,11 @@ function BottomTab() {
     return (
         <Tab.Navigator>
             <Tab.Screen name="Anasayfa" component={Dosya}
+
                 options={{
                     headerShown: false,
                     tabBarIcon: () => <Entypo name="home" size={24} color="black" />
+
                 }}
             />
 
