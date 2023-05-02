@@ -1,99 +1,172 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import {
     View,
-    Image,
-    TouchableOpacity,
     Text,
+    Platform,
+    StyleSheet,
+    Alert,
+    ActivityIndicator,
+    TextInput,
+    Button,
 } from 'react-native';
+import ActionButton from 'react-native-action-button';
+import Icon from 'react-native-vector-icons/Ionicons';
 import ImagePicker from 'react-native-image-picker';
-import QRCode from "react-native-qrcode-svg"
-import BottomTab from '../../components/bottomTab';
 
-import { launchCamera, launchImageLibrary, showImagePicker } from 'react-native-image-picker';
-const App = () => {
-    const [imageSource, setImageSource] = useState(null);
-    const [qrCodeValue, setQRCodeValue] = useState(null);
-    const [pic, setPic] = useState('')
-    const [singleData, setSingleData] = useState([]);
+//import storage from '@react-native-firebase/storage';
+//import firestore from '@react-native-firebase/firestore';
 
-    const [fileData, setFileData] = useState([])
-    const [fileUri, setFileUri] = useState(null)
-    const option = {
-        includeBase64: true,
-        storageOptions: {
-            skipBackup: true,
-            path: 'image'
-        },
-        mediaType: 'photo',
-        quality: 1,
-        saveToPhotos: true
+
+
+//import { AuthContext } from '../navigation/AuthProvider';
+
+const AddPostScreen = () => {
+    //const { user, logout } = useContext(AuthContext);
+
+    const [image, setImage] = useState(null);
+    const [uploading, setUploading] = useState(false);
+    const [transferred, setTransferred] = useState(0);
+    const [post, setPost] = useState(null);
+
+    const takePhotoFromCamera = () => {
+        ImagePicker.openCamera({
+            width: 1200,
+            height: 780,
+            cropping: true,
+        }).then((image) => {
+            console.log(image);
+            const imageUri = Platform.OS === 'ios' ? image.sourceURL : image.path;
+            setImage(imageUri);
+        });
     };
 
-    const selectImage = () => {
-        launchImageLibrary(option, (res) => {
-            if (res.didCancel) {
-                console.log('cancelled image selection')
-            }
-            else {
-                const source = { uri: res.uri };
-                console.log('response', JSON.stringify(res))
-                setFileData(res.assets[0].base64)
-                setFileUri(res.assets[0].uri)
-                setImageSource(res.uri);
-                setQRCodeValue(res.uri);
-                console.log('id : ', res.assets[0].id)
-                console.log('uri : ', res.assets[0].uri)
-                console.log('fileName : ', res.assets[0].fileName)
-                console.log('fileSize : ', res.assets[0].fileSize)
-                console.log('type : ', res.assets[0].type)
-            }
-        })
-    }
-    const renderFileData = () => {
-        if (fileData) {
-            const base64Data = `data:image/jpeg;base64,${fileData}`;
-            return (
-                <View>
-                    <Image style={{ width: 150, height: 150, marginLeft: 2, padding: 2 }} source={{ uri: base64Data }} />
-                    <QRCode
-                        value={base64Data}
-                        size={150}
-                        color='black'
-                        backgroundColor='white'
-                    />
-                </View>
-            )
-        }
-    }
-    return (
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-            <TouchableOpacity style={{ backgroundColor: '#007AFF', padding: 10, margin: 20, borderRadius: 10 }} onPress={selectImage}>
-                <Text style={{ color: 'white', fontSize: 18 }}>Select Image</Text>
-            </TouchableOpacity>
-            <QRCode
-                value={'https://www.google.com'}
-                size={150} //boyutunu artırabiliriz. Default değeri 100’dür
-                color={'purple'} //rengini değiştirebiliriz
-                enableGradient={true} //gradient renk tasarlamak için öncelikle bu     değeri true yapmalıyız
-                linearGradient={['red', 'purple', 'white']} //istenilen renklerle kombin yapabiliriz.
-            />
-            {imageSource && (
-                <View style={{ alignItems: 'center' }}>
-                    <Image
-                        source={{ uri: imageSource }}
-                        style={{ width: 200, height: 200, marginTop: 20 }}
-                    />
-                    <QRCode
-                        value={qrCodeValue}
-                        size={200}
-                        bgColor='black'
-                        fgColor='white'
-                    />
-                </View>
-            )}
+    const choosePhotoFromLibrary = () => {
+        ImagePicker.openPicker({
+            width: 1200,
+            height: 780,
+            cropping: true,
+        }).then((image) => {
+            console.log(image);
+            const imageUri = Platform.OS === 'ios' ? image.sourceURL : image.path;
+            setImage(imageUri);
+        });
+    };
 
+    const submitPost = async () => {
+        const imageUrl = await uploadImage();
+        console.log('Image Url: ', imageUrl);
+        console.log('Post: ', post);
+
+        firestore()
+            .collection('posts')
+            .add({
+                userId: user.uid,
+                post: post,
+                postImg: imageUrl,
+                postTime: firestore.Timestamp.fromDate(new Date()),
+                likes: null,
+                comments: null,
+            })
+            .then(() => {
+                console.log('Post Added!');
+                Alert.alert(
+                    'Post published!',
+                    'Your post has been published Successfully!',
+                );
+                setPost(null);
+            })
+            .catch((error) => {
+                console.log('Something went wrong with added post to firestore.', error);
+            });
+    }
+
+    const uploadImage = async () => {
+        if (image == null) {
+            return null;
+        }
+        const uploadUri = image;
+        let filename = uploadUri.substring(uploadUri.lastIndexOf('/') + 1);
+
+        // Add timestamp to File Name
+        const extension = filename.split('.').pop();
+        const name = filename.split('.').slice(0, -1).join('.');
+        filename = name + Date.now() + '.' + extension;
+
+        setUploading(true);
+        setTransferred(0);
+
+        const storageRef = storage().ref(`photos/${filename}`);
+        const task = storageRef.putFile(uploadUri);
+
+        // Set transferred state
+        task.on('state_changed', (taskSnapshot) => {
+            console.log(
+                `${taskSnapshot.bytesTransferred} transferred out of ${taskSnapshot.totalBytes}`,
+            );
+
+            setTransferred(
+                Math.round(taskSnapshot.bytesTransferred / taskSnapshot.totalBytes) *
+                100,
+            );
+        });
+
+        try {
+            await task;
+
+            const url = await storageRef.getDownloadURL();
+
+            setUploading(false);
+            setImage(null);
+
+            // Alert.alert(
+            //   'Image uploaded!',
+            //   'Your image has been uploaded to the Firebase Cloud Storage Successfully!',
+            // );
+            return url;
+
+        } catch (e) {
+            console.log(e);
+            return null;
+        }
+
+    };
+
+    return (
+        <View style={styles.container}>
+
+            {image != null ? <AddImage source={{ uri: image }} /> : null}
+
+
+
+            <ActionButton buttonColor="#2e64e5">
+                <ActionButton.Item
+                    buttonColor="#9b59b6"
+                    title="Take Photo"
+                    onPress={takePhotoFromCamera}>
+                    <Icon name="camera-outline" style={styles.actionButtonIcon} />
+                </ActionButton.Item>
+                <ActionButton.Item
+                    buttonColor="#3498db"
+                    title="Choose Photo"
+                    onPress={choosePhotoFromLibrary}>
+                    <Icon name="md-images-outline" style={styles.actionButtonIcon} />
+                </ActionButton.Item>
+            </ActionButton>
         </View>
     );
 };
 
-export default App;
+export default AddPostScreen;
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    actionButtonIcon: {
+        fontSize: 20,
+        height: 22,
+        color: 'white',
+    },
+});
