@@ -1,0 +1,11 @@
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
+[user]
+	name = muberracatak
+	email = mubcatak45@gmail.com
+[http]
+	postBuffer = 524288000
+	version = HTTP/1.1

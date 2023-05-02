@@ -1,0 +1,139 @@
+# npm resolution error report
+
+2023-03-25T22:28:31.664Z
+
+While resolving: awesome@0.0.1
+Found: react@18.1.0
+node_modules/react
+  react@"18.1.0" from the root project
+  peer react@"*" from native-base@3.4.28
+  node_modules/native-base
+    native-base@"^3.4.25" from the root project
+
+Could not resolve dependency:
+peer react@"^18.2.0" from react-dom@18.2.0
+node_modules/react-dom
+  react-dom@"^18.2.0" from the root project
+  peer react-dom@"*" from native-base@3.4.28
+  node_modules/native-base
+    native-base@"^3.4.25" from the root project
+
+Fix the upstream dependency conflict, or retry
+this command with --force, or --legacy-peer-deps
+to accept an incorrect (and potentially broken) dependency resolution.
+
+Raw JSON explanation object:
+
+{
+  "code": "ERESOLVE",
+  "current": {
+    "name": "react",
+    "version": "18.1.0",
+    "whileInstalling": {
+      "name": "awesome",
+      "version": "0.0.1",
+      "path": "/Users/tubanurcatak/Awesome"
+    },
+    "location": "node_modules/react",
+    "isWorkspace": false,
+    "dependents": [
+      {
+        "type": "prod",
+        "name": "react",
+        "spec": "18.1.0",
+        "from": {
+          "location": "/Users/tubanurcatak/Awesome"
+        }
+      },
+      {
+        "type": "peer",
+        "name": "react",
+        "spec": "*",
+        "from": {
+          "name": "native-base",
+          "version": "3.4.28",
+          "whileInstalling": {
+            "name": "awesome",
+            "version": "0.0.1",
+            "path": "/Users/tubanurcatak/Awesome"
+          },
+          "location": "node_modules/native-base",
+          "isWorkspace": false,
+          "dependents": [
+            {
+              "type": "prod",
+              "name": "native-base",
+              "spec": "^3.4.25",
+              "from": {
+                "location": "/Users/tubanurcatak/Awesome"
+              }
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "currentEdge": {
+    "type": "prod",
+    "name": "react",
+    "spec": "18.1.0",
+    "from": {
+      "location": "/Users/tubanurcatak/Awesome"
+    }
+  },
+  "edge": {
+    "type": "peer",
+    "name": "react",
+    "spec": "^18.2.0",
+    "error": "INVALID",
+    "from": {
+      "name": "react-dom",
+      "version": "18.2.0",
+      "whileInstalling": {
+        "name": "awesome",
+        "version": "0.0.1",
+        "path": "/Users/tubanurcatak/Awesome"
+      },
+      "location": "node_modules/react-dom",
+      "isWorkspace": false,
+      "dependents": [
+        {
+          "type": "prod",
+          "name": "react-dom",
+          "spec": "^18.2.0",
+          "from": {
+            "location": "/Users/tubanurcatak/Awesome"
+          }
+        },
+        {
+          "type": "peer",
+          "name": "react-dom",
+          "spec": "*",
+          "from": {
+            "name": "native-base",
+            "version": "3.4.28",
+            "whileInstalling": {
+              "name": "awesome",
+              "version": "0.0.1",
+              "path": "/Users/tubanurcatak/Awesome"
+            },
+            "location": "node_modules/native-base",
+            "isWorkspace": false,
+            "dependents": [
+              {
+                "type": "prod",
+                "name": "native-base",
+                "spec": "^3.4.25",
+                "from": {
+                  "location": "/Users/tubanurcatak/Awesome"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "strictPeerDeps": false,
+  "force": false
+}
