@@ -5,10 +5,15 @@ import { Button, Image, View, StyleSheet } from 'react-native';
 import { launchCamera, launchImageLibrary, showImagePicker } from 'react-native-image-picker';
 import ActionButton from 'react-native-action-button';
 import Icon from 'react-native-vector-icons/Ionicons';
-
+import { ref, uploadBytes } from "firebase/storage";
+import { storage } from '../../components/config'
 const QRCodeGenerator = () => {
     const [imageUrl, setImageUrl] = useState(null);
     const [fileData, setFileData] = useState([])
+    const [image, setImage] = useState()
+
+
+
     const option = {
         includeBase64: true,
         storageOptions: {
@@ -34,7 +39,7 @@ const QRCodeGenerator = () => {
                 const source = { uri: res.uri };
                 console.log('response', JSON.stringify(res))
                 setFileData(res.assets[0].base64)
-                setFileUri(res.assets[0].uri)
+                //setFileUri(res.assets[0].uri)
                 console.log('id : ', res.assets[0].id)
                 console.log('uri : ', res.assets[0].uri)
                 console.log('fileName : ', res.assets[0].fileName)
@@ -98,6 +103,7 @@ const QRCodeGenerator = () => {
                     <Icon name="md-images-outline" style={styles.actionButtonIcon} />
                 </ActionButton.Item>
             </ActionButton>
+
         </View>
     );
 };
