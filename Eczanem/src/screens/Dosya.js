@@ -13,15 +13,14 @@ const ImagePickerScreen = () => {
     const [imageUrl, setImageUrl] = useState(null);
     const [downloadURL, setDownloadURL] = useState(null);
     const uploadImage = async (uri, type) => {
-        const storageRef = ref(storage, `images/${Date.now()}.${type}`);
+        const storageRef = ref(storage, `image/jpg`);
         const snapshot = await uploadBytes(storageRef, uri);
-        //const downloadUrl = await getDownloadURL(ref(storage, 'path/to/file.pdf'));
-
-        const downloadURL = await getDownloadURL(snapshot.ref);
-        setDownloadURL(downloadURL);
-        console.log('Download URL:', downloadURL);
+        const downloadUrl = await getDownloadURL(snapshot.ref);
+        setDownloadURL(downloadUrl);
         console.log('Uploaded a blob or file!', snapshot.ref);
+        console.log('Download URL:', downloadUrl);
     };
+
 
     const openCamera = () => {
         launchCamera({ mediaType: 'photo' }, (response) => {
