@@ -5,9 +5,10 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import Feather from 'react-native-vector-icons/Feather'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import { NavigationContainer } from '@react-navigation/native';
-import Dosya from '../src/screens/Dosya'
+import Ayarlar from '../src/screens/Ayarlar'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import Anasayfa from '../src/screens/Anasayfa'
+import Hesap from '../src/screens/Hesap'
 
 import Entypo from 'react-native-vector-icons/Entypo'
 
@@ -52,13 +53,13 @@ function BottomTab() {
                 }}
             />
 
-            <Tab.Screen name="Ayarlar" component={Dosya}
+            <Tab.Screen name="Ayarlar" component={Ayarlar}
                 options={{
                     headerShown: false,
                     tabBarIcon: () => <Feather name="settings" size={24} color="black" />
                 }}
             />
-            <Tab.Screen name="list" component={Dosya}
+            <Tab.Screen name="list" component={Ayarlar}
                 options={{
                     tabBarButton: (props) => <CustomTabBarButton {...props} />
                 }}
@@ -70,7 +71,7 @@ function BottomTab() {
                 }}
 
             />
-            <Tab.Screen name="Hesap" component={Dosya}
+            <Tab.Screen name="Hesap" component={Hesap}
                 options={{
                     headerShown: false,
                     tabBarIcon: () => <MaterialCommunityIcons name="account" size={24} color="black" />

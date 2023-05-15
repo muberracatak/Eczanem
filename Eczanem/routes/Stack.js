@@ -3,8 +3,9 @@ import QrScreen from '../src/screens/QrScreen'
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer } from "@react-navigation/native";
 import BottomTab from '../components/bottomTab'
-import Dosya from '../src/screens/Dosya'
+import Ayarlar from '../src/screens/Ayarlar'
 import Anasayfa from '../src/screens/Anasayfa'
+import Hesap from '../src/screens/Hesap'
 
 const Stack = createNativeStackNavigator();
 const StackNavigator = ({ navigation }) => {
@@ -38,9 +39,14 @@ const StackNavigator = ({ navigation }) => {
                         }}
                     />
 
-
-                    <Stack.Screen name="Dosya"
-                        component={Dosya}
+                    <Stack.Screen name="Hesap"
+                        component={Hesap}
+                        options={{
+                            headerShown: false
+                        }}
+                    />
+                    <Stack.Screen name="Ayarlar"
+                        component={Ayarlar}
                         options={{
                             headerShown: false
                         }}
