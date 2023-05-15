@@ -4,6 +4,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer } from "@react-navigation/native";
 import BottomTab from '../components/bottomTab'
 import Dosya from '../src/screens/Dosya'
+import Anasayfa from '../src/screens/Anasayfa'
 
 const Stack = createNativeStackNavigator();
 const StackNavigator = ({ navigation }) => {
@@ -20,6 +21,12 @@ const StackNavigator = ({ navigation }) => {
                     }}>
                     <Stack.Screen name="BottomTab"
                         component={BottomTab}
+                        options={{
+                            headerShown: false
+                        }}
+                    />
+                    <Stack.Screen name="Anasayfa"
+                        component={Anasayfa}
                         options={{
                             headerShown: false
                         }}

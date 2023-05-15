@@ -7,6 +7,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import { NavigationContainer } from '@react-navigation/native';
 import Dosya from '../src/screens/Dosya'
 import AntDesign from 'react-native-vector-icons/AntDesign'
+import Anasayfa from '../src/screens/Anasayfa'
 
 import Entypo from 'react-native-vector-icons/Entypo'
 
@@ -42,7 +43,7 @@ function BottomTab() {
 
     return (
         <Tab.Navigator>
-            <Tab.Screen name="Anasayfa" component={Dosya}
+            <Tab.Screen name="Anasayfa" component={Anasayfa}
 
                 options={{
                     headerShown: false,
