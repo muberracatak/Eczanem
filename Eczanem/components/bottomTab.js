@@ -3,12 +3,17 @@ import QrScreen from '../src/screens/QrScreen'
 import { TouchableOpacity, Image } from 'react-native'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import Feather from 'react-native-vector-icons/Feather'
+import Ionicons from 'react-native-vector-icons/Ionicons'
+import React, { useState, createContext, useContext, useEffect } from 'react';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import { NavigationContainer } from '@react-navigation/native';
 import Ayarlar from '../src/screens/Ayarlar'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import Anasayfa from '../src/screens/Anasayfa'
 import Hesap from '../src/screens/Hesap'
+//import Chat from '../src/screens/chatApp/Chat'
+//import { onAuthStateChanged } from 'firebase/auth';
+
 
 import Entypo from 'react-native-vector-icons/Entypo'
 
@@ -53,12 +58,13 @@ function BottomTab() {
                 }}
             />
 
-            <Tab.Screen name="Ayarlar" component={Ayarlar}
+            <Tab.Screen name="Chat" component={Chat}
                 options={{
                     headerShown: false,
-                    tabBarIcon: () => <Feather name="settings" size={24} color="black" />
+                    tabBarIcon: () => <Ionicons name="chatbubbles-sharp" size={24} color="black" />
                 }}
             />
+
             <Tab.Screen name="list" component={Ayarlar}
                 options={{
                     tabBarButton: (props) => <CustomTabBarButton {...props} />

@@ -5,9 +5,6 @@ import deprecatedPropType from 'deprecated-react-native-prop-types';
 
 const PharmacyHomeScreen = () => {
     const [address, setAddress] = React.useState('Ferhat sok. sarıgazi mah daire:3 kat:5 Üsküdar / İstanbul '); // Adres bilgisi state'i
-
-
-
     return (
         <View>
             <ScrollView>

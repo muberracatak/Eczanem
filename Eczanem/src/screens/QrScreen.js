@@ -7,11 +7,14 @@ import ActionButton from 'react-native-action-button';
 import Icon from 'react-native-vector-icons/Ionicons';
 import QRCode from 'react-native-qrcode-svg';
 
+
 const ImagePickerScreen = () => {
     const [imageUri, setImageUri] = useState(null);
     const [imageType, setImageType] = useState(null);
     const [imageUrl, setImageUrl] = useState(null);
     const [downloadURL, setDownloadURL] = useState(null);
+
+
     const uploadImage = async (uri, type) => {
         const storageRef = ref(storage, `image/jpg`);
         const snapshot = await uploadBytes(storageRef, uri);

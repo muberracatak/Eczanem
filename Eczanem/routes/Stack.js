@@ -6,6 +6,13 @@ import BottomTab from '../components/bottomTab'
 import Ayarlar from '../src/screens/Ayarlar'
 import Anasayfa from '../src/screens/Anasayfa'
 import Hesap from '../src/screens/Hesap'
+import SplashScreenPharm from '../src/screens/pharmacist/SplashScreenPharm';
+import LoginScreenPharm from '../src/screens/pharmacist/LoginScreenPharm';
+import RegisterScreenPharm from '../src/screens/pharmacist/RegisterScreenPharm';
+import SplashScreen from '../src/screens/user/SplashScreen';
+import LoginScreen from '../src/screens/user/LoginScreen';
+import RegisterScreen from '../src/screens/user/RegisterScreen';
+import Chat from '../src/screens/chatApp/Chat';
 
 const Stack = createNativeStackNavigator();
 const StackNavigator = ({ navigation }) => {
@@ -20,12 +27,51 @@ const StackNavigator = ({ navigation }) => {
                         contentStyle: { backgroundColor: 'white' },
 
                     }}>
+                    <Stack.Screen
+                        name="SplashScreen"
+                        component={SplashScreen}
+                        options={{ headerShown: false }}
+                    />
+                    <Stack.Screen
+                        name="Chat"
+                        component={Chat}
+                        options={{ headerShown: false }}
+                    />
+
+                    <Stack.Screen
+                        name="LoginScreen"
+                        component={LoginScreen}
+                        options={{ headerShown: false }}
+                    />
+                    <Stack.Screen
+                        name="RegisterScreen"
+                        component={RegisterScreen}
+                        options={{ headerShown: false }}
+                    />
+                    <Stack.Screen
+                        name="SplashScreenPharm"
+                        component={SplashScreenPharm}
+                        options={{ headerShown: false }}
+                    />
+                    <Stack.Screen
+                        name="LoginScreenPharm"
+                        component={LoginScreenPharm}
+                        options={{ headerShown: false }}
+                    />
+                    <Stack.Screen
+                        name="RegisterScreenPharm"
+                        component={RegisterScreenPharm}
+                        options={{ headerShown: false }}
+                    />
+
+
                     <Stack.Screen name="BottomTab"
                         component={BottomTab}
                         options={{
                             headerShown: false
                         }}
                     />
+
                     <Stack.Screen name="Anasayfa"
                         component={Anasayfa}
                         options={{
