@@ -2,8 +2,10 @@ import React, { useState } from 'react';
 import { StyleSheet, View, TextInput, TouchableOpacity, Text } from 'react-native';
 import { auth } from '../../../components/config';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
-
+import { db } from '../../../components/config';
+import { ref, push, set } from 'firebase/database';
 const RegisterScreenPharm = ({ navigation }) => {
+    const [id, setId] = useState('');
     const [pharmacyName, setPharmacyName] = useState('');
     const [pharmacyCode, setPharmacyCode] = useState('');
     const [firstName, setFirstName] = useState('');
@@ -18,8 +20,30 @@ const RegisterScreenPharm = ({ navigation }) => {
     const handleRegister = () => {
         createUserWithEmailAndPassword(auth, email, password).then(userCredential => {
             const user = userCredential.user;
+            console.log('kaydolan kullanıcı ', user.email)
+            const usersRef = ref(db, 'eczacilar');
+            const newUserRef = push(usersRef);
+            const idliuser = {
+                pharmacyName,
+                pharmacyCode,
+                firstName,
+                lastName,
+                email,
+                password,
+                userId: user.uid,
+                qr: ''
+            };
+            set(newUserRef, idliuser)
+                .then(() => {
+                    console.log('Kullanıcı kaydedildi');
+                    console.log(pharmacyName, pharmacyCode, firstName, lastName, email, password)
+                })
+                .catch((error) => {
+                    console.log('Hata:', error);
+                });
         }).catch(error => console.log(error.message));
         navigation.navigate('LoginScreenPharm');
+
     };
 
     return (

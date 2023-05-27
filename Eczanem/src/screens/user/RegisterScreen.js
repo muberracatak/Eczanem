@@ -22,14 +22,17 @@ const RegisterScreen = ({ navigation }) => {
         createUserWithEmailAndPassword(auth, email, password).then(userCredential => {
             const user = userCredential.user;
             const userRef = ref(db, 'kullanıcılar'); // 'users' yerine kaydetmek istediğiniz veritabanı yolunu kullanın
+            const newUserRef = push(userRef);
             const userData = {
                 firstName,
                 lastName,
                 birthdate: formattedBirthdate,
                 address,
                 email,
+                userId: user.uid,
+                role: 'hasta'
             };
-            set(userRef, userData)
+            set(newUserRef, userData)
                 .then(() => {
                     console.log('Kullanıcı başarıyla veritabanına kaydedildi');
                 })

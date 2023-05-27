@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, Image, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, Image, StyleSheet, Button } from 'react-native';
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { storage } from '../../components/config'
+import { storage, db } from '../../components/config'
 import ActionButton from 'react-native-action-button';
 import Icon from 'react-native-vector-icons/Ionicons';
 import QRCode from 'react-native-qrcode-svg';
 
 
-const ImagePickerScreen = () => {
+const ImagePickerScreen = ({ navigation }) => {
     const [imageUri, setImageUri] = useState(null);
     const [imageType, setImageType] = useState(null);
     const [imageUrl, setImageUrl] = useState(null);
@@ -62,6 +62,9 @@ const ImagePickerScreen = () => {
             return (
                 <View style={{ top: 10, left: 10 }}>
                     <QRCode value={downloadURL} size={200} />
+                    <View style={{ top: 30 }}>
+                        <Button title='Eczacilara gonder' onPress={() => navigation.navigate('EczacilarListesi', { url: downloadURL })} />
+                    </View>
                 </View>
             );
         } else {
@@ -71,15 +74,6 @@ const ImagePickerScreen = () => {
 
     return (
         <View style={styles.container}>
-            {/*{imageUri && <Image source={{ uri: imageUri }} style={styles.image} />}
-            <TouchableOpacity style={styles.button} onPress={openCamera}>
-                <Text style={styles.buttonText}>Take a Photo</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.button} onPress={openImageLibrary}>
-                <Text style={styles.buttonText}>Choose from Library</Text>
-            </TouchableOpacity>
-            {/*{imageUrl && <Image source={{ uri: imageUrl }} style={{ width: 200, height: 200 }} />}*/}
-
             {renderQRCode()}
             <ActionButton buttonColor="#2e64e5" style={{ top: 500 }}>
                 <ActionButton.Item

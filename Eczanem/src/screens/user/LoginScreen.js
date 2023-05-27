@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, TextInput, TouchableOpacity, Text, Image } from 'react-native';
-import { auth } from '../../../components/config';
+import { auth, database } from '../../../components/config';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 
 const LoginScreen = ({ navigation }) => {
@@ -12,16 +12,25 @@ const LoginScreen = ({ navigation }) => {
         navigation.navigate('RegisterScreen');
     };
 
-    const handleLogin = () => {
+    const handleLogin = async () => {
         signInWithEmailAndPassword(auth, email, password)
             .then((userCredential) => {
                 const user = userCredential.user;
-                console.log('Oturum açan kullanıcı:', user.email);
+                console.log('Oturum açan kullanıcı:', user.email, user.uid);
+                setEmail(user.email)
+                //const userDoc = getDoc(doc(database, 'users', user.uid));
+                //const userRole = userDoc.data()?.role;
+                //console.log(userRole)
+                /*if (user.role === 'eczaci') {
+                    navigation.navigate('Chat');
+                } else {
+                    navigation.navigate('Hesap');
+                }*/
             })
             .catch((error) => {
                 console.log('Hata:', error.message);
             });
-        navigation.navigate('BottomTab');
+        navigation.navigate('BottomTab', { email: email });
     }
 
     return (

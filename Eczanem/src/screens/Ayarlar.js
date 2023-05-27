@@ -1,148 +1,111 @@
-import React, { useState, useEffect } from 'react';
-import {
-    StyleSheet,
-    View,
-    Text,
-    Button,
-    ScrollView,
-    TextInput
-} from 'react-native';
-import CheckBox from '@react-native-community/checkbox';
-import {
-    ref,
-    onValue,
-    push,
-    update,
-    remove
-} from 'firebase/database';
-import { db } from '../../components/config';
+import React, { useState, useRef } from 'react';
+import { View, TextInput, TouchableOpacity, Text } from 'react-native';
+import MapView, { Marker } from 'react-native-maps';
 
-const Ayarlar = () => {
-    const [todos, setTodos] = useState({});
-    const [presentTodo, setPresentTodo] = useState('');
-    const todosKeys = Object.keys(todos);
+const MapScreen = () => {
+    const apiKey = 'AIzaSyAaMWs_VXz8T34g9QE83RRXB7cAz0K_6xU'; // API anahtarınızı buraya yerleştirin
 
-    useEffect(() => {
-        return onValue(ref(db, '/todos'), querySnapShot => {
-            let data = querySnapShot.val() || {};
-            let todoItems = { ...data };
-            setTodos(todoItems);
-        });
-    }, []);
+    const [address, setAddress] = useState('');
+    const [predictions, setPredictions] = useState([]);
+    const [coordinates, setCoordinates] = useState(null);
+    const mapRef = useRef(null);
 
-    function addNewTodo() {
-        push(ref(db, '/todos'), {
-            done: false,
-            title: presentTodo,
-        });
-        setPresentTodo('');
-    }
+    const handleSearch = () => {
+        fetch(`https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${address}&key=${apiKey}`)
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.predictions) {
+                    setPredictions(data.predictions);
+                }
+            })
+            .catch((error) => {
+                console.log('Hata:', error);
+            });
+    };
 
-    function clearTodos() {
-        remove(ref(db, '/todos'));
-    }
+    const handlePredictionPress = (prediction) => {
+        const placeId = prediction.place_id;
+        fetch(`https://maps.googleapis.com/maps/api/place/details/json?place_id=${placeId}&key=${apiKey}`)
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.result) {
+                    const result = data.result;
+                    const { lat, lng } = result.geometry.location;
 
-    return (
-        <ScrollView
-            style={styles.container}
-            contentContainerStyle={styles.contentContainerStyle}>
-            <View>
-                {todosKeys.length > 0 ? (
-                    todosKeys.map(key => (
-                        <ToDoItem
-                            key={key}
-                            id={key}
-                            todoItem={todos[key]}
-                        />
-                    ))
-                ) : (
-                    <Text>No todo item</Text>
-                )}
-            </View>
+                    // Enlem ve boylam koordinatlarını ayarla
+                    setCoordinates({ latitude: lat, longitude: lng });
 
-            <TextInput
-                placeholder="New todo"
-                value={presentTodo}
-                style={styles.textInput}
-                onChangeText={text => {
-                    setPresentTodo(text);
-                }}
-                onSubmitEditing={addNewTodo}
-            />
+                    // Haritayı seçilen adresin üzerine zoom yap
+                    mapRef.current.animateToRegion({
+                        latitude: lat,
+                        longitude: lng,
+                        latitudeDelta: 0.0922,
+                        longitudeDelta: 0.0421,
+                    });
+                }
+            })
+            .catch((error) => {
+                console.log('Hata:', error);
+            });
+    };
 
-            <View>
-                <View style={{ marginTop: 20 }}>
-                    <Button
-                        title="Add new todo"
-                        onPress={addNewTodo}
-                        color="green"
-                        disabled={presentTodo == ''}
-                    />
-                </View>
+    const handleDoublePress = (event) => {
+        const { coordinate } = event.nativeEvent;
 
-                <View style={{ marginTop: 20 }}>
-                    <Button
-                        title="Clear the todo list"
-                        onPress={clearTodos}
-                        color="red"
-                        style={{ marginTop: 20 }}
-                    />
-                </View>
-            </View>
-        </ScrollView>
-    );
-}
-
-const ToDoItem = ({ todoItem: { title, done }, id }) => {
-    const [doneState, setDone] = useState(done);
-
-    const onCheck = (isChecked) => {
-        setDone(isChecked);
-        update(ref(db, '/todos'), {
-            [id]: {
-                title,
-                done: !doneState,
-            },
+        // Haritayı çift tıklanan noktaya zoom yap
+        mapRef.current.animateToRegion({
+            latitude: coordinate.latitude,
+            longitude: coordinate.longitude,
+            latitudeDelta: 0.0922,
+            longitudeDelta: 0.0421,
         });
     };
+
     return (
-        <View style={styles.todoItem}>
-            <CheckBox
-                onValueChange={onCheck}
-                value={doneState}
-            />
-            <Text style={[styles.todoText, { opacity: doneState ? 0.2 : 1 }]}>
-                {title}
-            </Text>
+        <View style={{ flex: 1 }}>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <TextInput
+                    style={{ flex: 1, height: 40, borderColor: 'gray', borderWidth: 1, marginRight: 10, paddingHorizontal: 10 }}
+                    placeholder="Adres girin"
+                    value={address}
+                    onChangeText={setAddress}
+                />
+                <TouchableOpacity style={{ padding: 10, backgroundColor: 'blue' }} onPress={handleSearch}>
+                    <Text style={{ color: 'white' }}>Ara</Text>
+                </TouchableOpacity>
+            </View>
+            <View>
+                {predictions.map((prediction) => (
+                    <TouchableOpacity key={prediction.place_id} onPress={() => handlePredictionPress(prediction)}>
+                        <Text>{prediction.description}</Text>
+                    </TouchableOpacity>
+                ))}
+            </View>
+            {coordinates && (
+                <MapView
+                    ref={mapRef}
+                    provider={MapView.PROVIDER_GOOGLE}
+                    providerProps={{
+                        apiKey: apiKey,
+                    }}
+                    style={{ flex: 1 }}
+                    initialRegion={{
+                        latitude: coordinates.latitude,
+                        longitude: coordinates.longitude,
+                        latitudeDelta: 0.0922,
+                        longitudeDelta: 0.0421,
+                    }}
+                    onDoublePress={handleDoublePress}
+                >
+                    <Marker
+                        coordinate={coordinates}
+                        image={require('../../assets/old.png')}
+                        title="ECZANE"
+                    />
+                </MapView>
+            )}
         </View>
     );
 };
 
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        paddingTop: 12
-    },
-    contentContainerStyle: {
-        padding: 24
-    },
-    textInput: {
-        borderWidth: 1,
-        borderColor: '#afafaf',
-        borderRadius: 5,
-        paddingHorizontal: 10,
-        marginVertical: 20,
-        fontSize: 20,
-    },
-    todoItem: {
-        flexDirection: 'row',
-        marginVertical: 10,
-        alignItems: 'center'
-    },
-    todoText: {
-        paddingHorizontal: 5,
-        fontSize: 16
-    },
-});
-
-export default Ayarlar;
+export default MapScreen;

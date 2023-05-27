@@ -1,11 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, TextInput, TouchableOpacity, Text, Image } from 'react-native';
-import { auth } from '../../../components/config';
+import { auth, db } from '../../../components/config';
 import { signInWithEmailAndPassword } from 'firebase/auth';
+import { ref, onValue, set, push } from 'firebase/database';
+import { useRoute } from '@react-navigation/native';
 
 const LoginScreenPharm = ({ navigation }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+
+    const [eczaneAd, setEczaneAd] = useState('');
+    const [eczaneCode, setEczaneCode] = useState('');
+    const [isim, setIsim] = useState('');
+    const [soyisim, setSoyisim] = useState('');
+    const [id, setId] = useState('');
+
 
 
     const handleRegisterPress = () => {
@@ -16,12 +25,35 @@ const LoginScreenPharm = ({ navigation }) => {
         signInWithEmailAndPassword(auth, email, password)
             .then((userCredential) => {
                 const user = userCredential.user;
-                console.log('Oturum açan kullanıcı:', user.email);
+                console.log('Oturum açan kullanıcı:', user.email, user.uid);
+                setEmail(user.email);
+                console.log('şifre : ', password)
+                /*const usersRef = ref(db, 'eczacilar');
+                const newUserRef = push(usersRef);
+                const idliuser = {
+                    eczaneAd: eczaneAd,
+                    eczaneCode: eczaneCode,
+                    isim: isim,
+                    soyisim: soyisim,
+                    email: email,
+                    password: password,
+                    userId: user.uid,
+                    qr: ''
+                };
+                set(newUserRef, idliuser)
+                    .then(() => {
+                        console.log('Kullanıcı kaydedildi');
+                    })
+                    .catch((error) => {
+                        console.log('Hata:', error);
+                    });*/
+
+                navigation.navigate('BottomTabEczaci', { emailAd: email });
             })
             .catch((error) => {
                 console.log('Hata:', error.message);
             });
-        navigation.navigate('QrScreen');
+
     }
 
     return (

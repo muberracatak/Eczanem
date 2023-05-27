@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, Image, FlatList, ScrollView, TouchableOpacity, TextInput, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { useNavigation } from '@react-navigation/native';
-import { auth, db, database } from '../../components/config';
-import { ref, onValue } from 'firebase/database';
+import { auth } from '../../../components/config';
+import { database } from '../../../components/config';
+
 const UserDetails = () => {
     const [user, setUser] = useState({
         username: '',
@@ -12,36 +13,31 @@ const UserDetails = () => {
         diseases: [],
         address: '',
     });
-    const [hastaliklar, setHastaliklar] = useState([]);
-    const [hastalikAdi, setHastalikAdi] = useState('');
-    const [adres, setAdres] = useState('');
-    const [name, setName] = useState('');
-    const [age, setAge] = useState('');
-    const [birthdate, setBirthdate] = useState([]);
-    const hastalik = {
+    const [newDisease, setNewDisease] = useState('');
 
-        Hastaliklar: hastaliklar
-    };
     const navigation = useNavigation();
-    const handleHastalikEkle = () => {
-        if (hastalikAdi.trim() !== '') {
-            setHastaliklar([...hastaliklar, hastalikAdi]);
-            setHastalikAdi('');
-        }
-    };
-    useEffect(() => {
-        const starCountRef = ref(db, 'kullanıcılar/');
-        onValue(starCountRef, (snapshot) => {
-            const data = snapshot.val();
 
-            setName(data.firstName);
-            setAge(data.yas);
-            setAdres(data.address);
-            setBirthdate(data.birthdate)
-            console.log(adres)
-            setHastalikAdi('');
-            setHastaliklar([])
-        });
+    useEffect(() => {
+        const fetchUserDetails = async () => {
+            try {
+                const userSnapshot = await database().collection('oldUsers').doc('user1').get();
+                if (userSnapshot.exists) {
+                    const userData = userSnapshot.data();
+                    const age = calculateAge(userData.birthdate);
+                    setUser(prevState => ({
+                        ...prevState,
+                        username: userData.username,
+                        birthdate: userData.birthdate,
+                        age: age,
+                        address: userData.address,
+                    }));
+                }
+            } catch (error) {
+                console.log('Error fetching user details: ', error);
+            }
+        };
+
+        fetchUserDetails();
     }, []);
 
     const calculateAge = birthdate => {
@@ -104,10 +100,10 @@ const UserDetails = () => {
                 <View style={styles.topContainer}>
                     <Image
                         style={styles.image}
-                        source={require('../../assets/old.png')}
+                        source={require('../../../assets/old.png')}
                     />
-                    <Text style={styles.pharmacyName}>{name}</Text>
-                    <Text style={styles.openStatusText}>{age}</Text>
+                    <Text style={styles.pharmacyName}>{user.username}</Text>
+                    <Text style={styles.openStatusText}>{user.age}</Text>
                 </View>
 
                 <View style={styles.bottomContainer}>
@@ -121,7 +117,7 @@ const UserDetails = () => {
                             />
                             <Text style={styles.detailTitle}>Doğum Tarihi</Text>
                         </View>
-                        <Text style={styles.detailText}>{birthdate}</Text>
+                        <Text style={styles.detailText}>{user.birthdate}</Text>
                     </View>
 
                     <View style={styles.detailBox}>
@@ -130,7 +126,7 @@ const UserDetails = () => {
                             <Text style={styles.detailTitle}>Hastalıklar</Text>
                         </View>
                         <FlatList
-                            data={hastaliklar}
+                            data={user.diseases}
                             renderItem={renderDisease}
                             keyExtractor={(item, index) => index.toString()}
                             ListEmptyComponent={
@@ -141,12 +137,12 @@ const UserDetails = () => {
                             <TextInput
                                 style={styles.input}
                                 placeholder="Hastalık adı giriniz..."
-                                value={hastalikAdi}
-                                onChangeText={(text) => setHastalikAdi(text)}
+                                value={newDisease}
+                                onChangeText={setNewDisease}
                             />
                             <TouchableOpacity
                                 style={styles.addButton}
-                                onPress={handleHastalikEkle}>
+                                onPress={handleAddDisease}>
                                 <Text style={styles.addButtonLabel}>EKLE</Text>
                             </TouchableOpacity>
                         </View>
@@ -162,7 +158,7 @@ const UserDetails = () => {
                             />
                             <Text style={styles.detailTitle}>Adres</Text>
                         </View>
-                        <Text style={styles.detailText}>{adres}</Text>
+                        <Text style={styles.detailText}>{user.address}</Text>
                     </View>
                 </View>
             </ScrollView>

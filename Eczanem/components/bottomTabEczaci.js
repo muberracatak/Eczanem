@@ -13,9 +13,8 @@ import Anasayfa from '../src/screens/Anasayfa'
 import Hesap from '../src/screens/Hesap'
 import Chat from '../src/screens/chatApp/Chat'
 import Home from '../src/screens/chatApp/Home'
-import EczacilarListesi from '../src/screens/EczacilarListesi'
 import SiparisListesi from '../src/screens/pharmacist/SiparisListesi';
-import Kullanicilar from '../src/screens/chatApp/Kullanicilar'
+import EczaciHesap from '../src/screens/pharmacist/EczaciHesap';
 
 import { onAuthStateChanged } from 'firebase/auth';
 const AuthenticatedUserContext = createContext({});
@@ -23,12 +22,14 @@ import deneme from '../src/screens/deneme'
 
 
 import Entypo from 'react-native-vector-icons/Entypo'
-
+import Kullanicilar from '../src/screens/chatApp/Kullanicilar';
+import Eczacilar from '../src/screens/chatApp/Eczacilar';
+import ChatEczacilar from '../src/screens/chatApp/ChatEczacilar';
 const Tab = createBottomTabNavigator();
 
-function BottomTab({ route }) {
-    const CustomTabBarButton = ({ children, navigation }) => {
+function BottomTabEczaci({ route }) {
 
+    const CustomTabBarButton = ({ children, navigation }) => {
         return (
             <TouchableOpacity
                 style={{
@@ -57,46 +58,28 @@ function BottomTab({ route }) {
 
     return (
         <Tab.Navigator>
-            <Tab.Screen name="Anasayfa" component={Anasayfa}
-
-                options={{
-                    headerShown: false,
-                    tabBarIcon: () => <Entypo name="home" size={24} color="black" />
-
-                }}
-            />
-            <Tab.Screen name="Ayarlar" component={Ayarlar}
-                options={{
-                    headerShown: false,
-                    tabBarIcon: () => <AntDesign name="qrcode" size={24} color="black" />
-                }}
-
-            />
 
 
-            <Tab.Screen name="QR" component={QrScreen}
-                options={{
-                    headerShown: false,
-                    tabBarIcon: () => <AntDesign name="qrcode" size={24} color="black" />
-                }}
 
-            />
-            <Tab.Screen name="list" component={Ayarlar}
-                options={{
-                    tabBarButton: (props) => <CustomTabBarButton {...props} />
-                }}
-            />
-            <Tab.Screen name="Kullanicilar" component={Kullanicilar}
-                options={{
-                    headerShown: false,
-                    tabBarIcon: () => <Ionicons name="chatbubbles-sharp" size={24} color="black" />
-                }}
 
-            />
-            <Tab.Screen name="Hesap" component={Hesap}
+
+            <Tab.Screen name="Siparisler" component={SiparisListesi}
                 options={{
                     headerShown: false,
                     tabBarIcon: () => <MaterialCommunityIcons name="account" size={24} color="black" />
+                }}
+            />
+            <Tab.Screen name="Hesap" component={EczaciHesap}
+                options={{
+                    headerShown: false,
+                    tabBarIcon: () => <MaterialCommunityIcons name="account" size={24} color="black" />
+                }}
+                initialParams={{ emailAdres: route.params.emailAd }}
+            />
+            <Tab.Screen name="Sohbet" component={Eczacilar}
+                options={{
+                    headerShown: false,
+                    tabBarIcon: () => <Ionicons name="chatbubbles-sharp" size={24} color="black" />
                 }}
             />
 
@@ -104,4 +87,4 @@ function BottomTab({ route }) {
     );
 }
 
-export default BottomTab;
+export default BottomTabEczaci;
