@@ -5,7 +5,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import BottomTab from '../components/bottomTab'
 import BottomTabEczaci from '../components/bottomTabEczaci'
 
-import Ayarlar from '../src/screens/Ayarlar'
+import VoiceRecorder from '../src/screens/VoiceRecorder'
 import Anasayfa from '../src/screens/Anasayfa'
 import Hesap from '../src/screens/Hesap'
 import SplashScreenPharm from '../src/screens/pharmacist/SplashScreenPharm';
@@ -24,6 +24,8 @@ import Kullanicilar from '../src/screens/chatApp/Kullanicilar';
 import Eczacilar from '../src/screens/chatApp/Eczacilar';
 import ChatEczacilar from '../src/screens/chatApp/ChatEczacilar';
 import ChatDeneme from '../src/screens/chatApp/ChatDeneme';
+import MapScreen from '../src/screens/MapScreen'
+import Ionicons from 'react-native-vector-icons/Ionicons'
 
 const Stack = createNativeStackNavigator();
 const StackNavigator = ({ navigation }) => {
@@ -49,7 +51,7 @@ const StackNavigator = ({ navigation }) => {
                         options={{ headerShown: false }}
                     />
                     <Stack.Screen
-                        name="ChatDeneme"
+                        name="Görüşme"
                         component={ChatDeneme}
                         options={{ headerShown: false }}
                     />
@@ -84,9 +86,24 @@ const StackNavigator = ({ navigation }) => {
                         options={{ headerShown: false }}
                     />
                     <Stack.Screen
+                        name="MapScreen"
+                        component={MapScreen}
+                        options={{ headerShown: false }}
+                    />
+                    <Stack.Screen
                         name="EczacilarListesi"
                         component={EczacilarListesi}
-                        options={{ headerShown: false }}
+                        options={({ route, navigation }) => ({
+                            title: "Eczacılar",
+                            headerBackTitleVisible: false,
+                            headerRight: () => (
+                                <Ionicons
+                                    name='map-sharp'
+                                    size={27}
+                                    color={'white'}
+                                    onPress={() => navigation.navigate('MapScreen')}
+                                />)
+                        })}
                     />
                     <Stack.Screen
                         name="RegisterScreen"
@@ -151,8 +168,8 @@ const StackNavigator = ({ navigation }) => {
                             headerShown: false
                         }}
                     />
-                    <Stack.Screen name="Ayarlar"
-                        component={Ayarlar}
+                    <Stack.Screen name="VoiceRecorder"
+                        component={VoiceRecorder}
                         options={{
                             headerShown: false
                         }}

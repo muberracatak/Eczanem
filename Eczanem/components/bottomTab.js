@@ -1,13 +1,13 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import QrScreen from '../src/screens/QrScreen'
-import { TouchableOpacity, Image } from 'react-native'
-import FontAwesome from 'react-native-vector-icons/FontAwesome'
-import Feather from 'react-native-vector-icons/Feather'
-import Ionicons from 'react-native-vector-icons/Ionicons'
+import { TouchableOpacity, Image } from 'react-native';
 import React, { useState, createContext, useContext, useEffect } from 'react';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import Feather from 'react-native-vector-icons/Feather';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { NavigationContainer } from '@react-navigation/native';
-import Ayarlar from '../src/screens/Ayarlar'
+import Entypo from 'react-native-vector-icons/Entypo';
+import VoiceRecorder from '../src/screens/VoiceRecorder'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import Anasayfa from '../src/screens/Anasayfa'
 import Hesap from '../src/screens/Hesap'
@@ -16,19 +16,17 @@ import Home from '../src/screens/chatApp/Home'
 import EczacilarListesi from '../src/screens/EczacilarListesi'
 import SiparisListesi from '../src/screens/pharmacist/SiparisListesi';
 import Kullanicilar from '../src/screens/chatApp/Kullanicilar'
+import QrScreen from '../src/screens/QrScreen'
+import MapScreen from '../src/screens/MapScreen'
 
 import { onAuthStateChanged } from 'firebase/auth';
 const AuthenticatedUserContext = createContext({});
 import deneme from '../src/screens/deneme'
 
-
-import Entypo from 'react-native-vector-icons/Entypo'
-
 const Tab = createBottomTabNavigator();
 
 function BottomTab({ route }) {
     const CustomTabBarButton = ({ children, navigation }) => {
-
         return (
             <TouchableOpacity
                 style={{
@@ -41,65 +39,85 @@ function BottomTab({ route }) {
                     marginTop: -30,
                     borderWidth: 2,
                     borderColor: 'white',
-
+                    opacity: 0.8, // Adjust the opacity as desired
+                    padding: 5, // Adjust the padding as desired
                 }}
-
             >
                 <Image
                     style={{ width: 70, height: 70, borderRadius: 40 }}
-                    source={require('../assets/eczane4.png')} />
+                    source={require('../assets/eczane4.png')}
+                />
             </TouchableOpacity>
-        )
-
-    }
-
-
+        );
+    };
 
     return (
-        <Tab.Navigator>
-            <Tab.Screen name="Anasayfa" component={Anasayfa}
-
+        <Tab.Navigator
+            tabBarOptions={{
+                style: {
+                    backgroundColor: '#ffffff', // Background color of the tab bar
+                    borderTopWidth: 0, // Remove top border
+                    elevation: 0, // Remove elevation for Android
+                },
+                showLabel: false, // Hide labels
+                activeTintColor: '#2634C0', // Color of the active tab
+                inactiveTintColor: 'gray', // Color of inactive tabs
+            }}
+        >
+            <Tab.Screen
+                name="Anasayfa"
+                component={Anasayfa}
                 options={{
-                    headerShown: false,
-                    tabBarIcon: () => <Entypo name="home" size={24} color="black" />
-
-                }}
-            />
-            <Tab.Screen name="Ayarlar" component={Ayarlar}
-                options={{
-                    headerShown: false,
-                    tabBarIcon: () => <AntDesign name="qrcode" size={24} color="black" />
-                }}
-
-            />
-
-
-            <Tab.Screen name="QR" component={QrScreen}
-                options={{
-                    headerShown: false,
-                    tabBarIcon: () => <AntDesign name="qrcode" size={24} color="black" />
-                }}
-
-            />
-            <Tab.Screen name="list" component={Ayarlar}
-                options={{
-                    tabBarButton: (props) => <CustomTabBarButton {...props} />
-                }}
-            />
-            <Tab.Screen name="Kullanicilar" component={Kullanicilar}
-                options={{
-                    headerShown: false,
-                    tabBarIcon: () => <Ionicons name="chatbubbles-sharp" size={24} color="black" />
-                }}
-
-            />
-            <Tab.Screen name="Hesap" component={Hesap}
-                options={{
-                    headerShown: false,
-                    tabBarIcon: () => <MaterialCommunityIcons name="account" size={24} color="black" />
+                    tabBarIcon: ({ color }) => (
+                        <Entypo name="home" size={24} color={color} />
+                    ),
                 }}
             />
 
+            <Tab.Screen
+                name="QR"
+                component={QrScreen}
+                options={{
+                    tabBarIcon: ({ color }) => (
+                        <AntDesign name="qrcode" size={24} color={color} />
+                    ),
+                }}
+            />
+
+            <Tab.Screen
+                name="Home"
+                component={Home}
+                options={{
+                    tabBarIcon: ({ color }) => (
+                        <AntDesign name="qrcode" size={24} color={color} />
+                    ),
+                }}
+            />
+            <Tab.Screen
+                name="list"
+                component={VoiceRecorder}
+                options={{
+                    tabBarButton: (props) => <CustomTabBarButton {...props} />,
+                }}
+            />
+            <Tab.Screen
+                name="Kullanicilar"
+                component={Kullanicilar}
+                options={{
+                    tabBarIcon: ({ color }) => (
+                        <Ionicons name="chatbubbles-sharp" size={24} color={color} />
+                    ),
+                }}
+            />
+            <Tab.Screen
+                name="Hesap"
+                component={Hesap}
+                options={{
+                    tabBarIcon: ({ color }) => (
+                        <MaterialCommunityIcons name="account" size={24} color={color} />
+                    ),
+                }}
+            />
         </Tab.Navigator>
     );
 }

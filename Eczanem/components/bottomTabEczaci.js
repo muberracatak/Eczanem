@@ -7,7 +7,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons'
 import React, { useState, createContext, useContext, useEffect } from 'react';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import { NavigationContainer } from '@react-navigation/native';
-import Ayarlar from '../src/screens/Ayarlar'
+import VoiceRecorder from '../src/screens/VoiceRecorder'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import Anasayfa from '../src/screens/Anasayfa'
 import Hesap from '../src/screens/Hesap'

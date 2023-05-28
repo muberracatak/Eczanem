@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, View, Image, TouchableOpacity, ScrollView } from 'react-native';
 import YoutubeIframe from 'react-native-youtube-iframe';
 import deprecatedPropType from 'deprecated-react-native-prop-types';
+import LottieView from 'lottie-react-native';
 
 const PharmacyHomeScreen = () => {
     const [address, setAddress] = React.useState('Ferhat sok. sarıgazi mah daire:3 kat:5 Üsküdar / İstanbul '); // Adres bilgisi state'i
@@ -9,7 +10,16 @@ const PharmacyHomeScreen = () => {
         <View>
             <ScrollView>
                 <View style={styles.container}>
-                    <Image source={require('../../assets/anasayfa.png')} style={styles.logo} />
+                    <View>
+                        <LottieView
+                            autoPlay
+                            style={{ height: 300, alignSelf: 'center', top: -10 }}
+                            speed={1}
+                            loop={true}
+                            source={require('../../assets/eczane.json')}
+                        />
+                    </View>
+
                     <View style={styles.addressContainer}>
                         <View style={styles.addressBox}>
                             <Text style={styles.addressText}>{address}</Text>

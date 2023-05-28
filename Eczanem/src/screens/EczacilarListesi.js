@@ -1,20 +1,38 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Image, Button } from 'react-native';
-import { db } from '../../components/config';
+import { View, Text, StyleSheet, Image, Button, TouchableOpacity } from 'react-native';
+import { db, auth } from '../../components/config';
 import { ref, onValue, set, update } from 'firebase/database';
 import CheckBox from '@react-native-community/checkbox';
+import { onAuthStateChanged } from 'firebase/auth';
+import MapView, { Marker } from 'react-native-maps';
+import FontAwesome from 'react-native-vector-icons/FontAwesome'
+import LottieView from 'lottie-react-native';
 
 const EczaciListesi = ({ navigation, route }) => {
     const [eczacilar, setEczacilar] = useState([]);
     const [checkedItems, setCheckedItems] = useState([]);
+    const [currentUser, setCurrentUser] = useState(null);
+    const apiKey = 'AIzaSyAaMWs_VXz8T34g9QE83RRXB7cAz0K_6xU';
     const { url } = route.params;
     useEffect(() => {
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                // Kullanıcı oturum açmış ise burası çalışır
+                setCurrentUser({
+                    _id: user.uid,
+                    name: user.email,
+                });
+            } else {
+                console.log('Kullanıcı oturum açmamış');
+            }
+        });
         const fetchEczacilar = async () => {
             const eczacilarRef = ref(db, 'eczacilar/');
             onValue(eczacilarRef, (snapshot) => {
                 const eczacilarData = snapshot.val();
                 const eczacilarArray = Object.values(eczacilarData);
                 setEczacilar(eczacilarArray);
+
             });
         };
         fetchEczacilar();
@@ -33,8 +51,12 @@ const EczaciListesi = ({ navigation, route }) => {
                     password: eczaci.password,
                     pharmacyCode: eczaci.pharmacyCode,
                     pharmacyName: eczaci.pharmacyName,
+                    pharmacyAdres: eczaci.pharmacyAdres,
                     qr: url,
+                    gonderenKisi: currentUser._id,
                     userId: userId,
+                    enlem: eczaci.enlem,
+                    boylam: eczaci.boylam
                 })
                     .then(() => {
                         console.log('Veri güncellendi.');
@@ -45,6 +67,7 @@ const EczaciListesi = ({ navigation, route }) => {
             }
         });
         alert('Reçeteniz başarıyla gönderildi');
+
         navigation.navigate('BottomTab');
     };
     const handleCheckboxToggle = (eczaci) => {
@@ -58,9 +81,10 @@ const EczaciListesi = ({ navigation, route }) => {
     return (
         <View style={styles.container}>
             {eczacilar.map((eczaci) => (
+
                 <View style={styles.eczaciContainer} key={eczaci.userId}>
                     <View style={styles.avatarContainer}>
-                        {/* <Text style={styles.avatarText}>{eczaci.firstName.charAt(0)}</Text> */}
+                        <Text style={styles.avatarText}>{eczaci.firstName.charAt(0)}</Text>
                     </View>
                     <View style={styles.infoContainer}>
                         <Text style={styles.adText}>{eczaci.pharmacyName}</Text>

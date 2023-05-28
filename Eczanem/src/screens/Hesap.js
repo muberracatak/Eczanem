@@ -100,72 +100,72 @@ const UserDetails = () => {
                     <Icon name="comments" size={24} color="#ffffff" />
                 </TouchableOpacity>
             </View>
-            <ScrollView>
-                <View style={styles.topContainer}>
-                    <Image
-                        style={styles.image}
-                        source={require('../../assets/old.png')}
-                    />
-                    <Text style={styles.pharmacyName}>{name}</Text>
-                    <Text style={styles.openStatusText}>{age}</Text>
-                </View>
 
-                <View style={styles.bottomContainer}>
-                    <View style={styles.detailBox}>
-                        <View style={styles.detailRow}>
-                            <Icon
-                                name="birthday-cake"
-                                size={20}
-                                color="#666"
-                                style={styles.icon}
-                            />
-                            <Text style={styles.detailTitle}>Doğum Tarihi</Text>
-                        </View>
-                        <Text style={styles.detailText}>{birthdate}</Text>
-                    </View>
+            <View style={styles.topContainer}>
+                <Image
+                    style={styles.image}
+                    source={require('../../assets/old.png')}
+                />
+                <Text style={styles.pharmacyName}>{name}</Text>
+                <Text style={styles.openStatusText}>{age}</Text>
+            </View>
 
-                    <View style={styles.detailBox}>
-                        <View style={styles.detailRow}>
-                            <Icon name="medkit" size={20} color="#666" style={styles.icon} />
-                            <Text style={styles.detailTitle}>Hastalıklar</Text>
-                        </View>
-                        <FlatList
-                            data={hastaliklar}
-                            renderItem={renderDisease}
-                            keyExtractor={(item, index) => index.toString()}
-                            ListEmptyComponent={
-                                <Text style={styles.detailText}>Hastalık bulunmamaktadır.</Text>
-                            }
+            <View style={styles.bottomContainer}>
+                <View style={styles.detailBox}>
+                    <View style={styles.detailRow}>
+                        <Icon
+                            name="birthday-cake"
+                            size={20}
+                            color="#666"
+                            style={styles.icon}
                         />
-                        <View style={styles.addDiseaseContainer}>
-                            <TextInput
-                                style={styles.input}
-                                placeholder="Hastalık adı giriniz..."
-                                value={hastalikAdi}
-                                onChangeText={(text) => setHastalikAdi(text)}
-                            />
-                            <TouchableOpacity
-                                style={styles.addButton}
-                                onPress={handleHastalikEkle}>
-                                <Text style={styles.addButtonLabel}>EKLE</Text>
-                            </TouchableOpacity>
-                        </View>
+                        <Text style={styles.detailTitle}>Doğum Tarihi</Text>
                     </View>
+                    <Text style={styles.detailText}>{birthdate}</Text>
+                </View>
 
-                    <View style={styles.detailBox}>
-                        <View style={styles.detailRow}>
-                            <Icon
-                                name="map-marker"
-                                size={20}
-                                color="#666"
-                                style={styles.icon}
-                            />
-                            <Text style={styles.detailTitle}>Adres</Text>
-                        </View>
-                        <Text style={styles.detailText}>{adres}</Text>
+                <View style={styles.detailBox}>
+                    <View style={styles.detailRow}>
+                        <Icon name="medkit" size={20} color="#666" style={styles.icon} />
+                        <Text style={styles.detailTitle}>Hastalıklar</Text>
+                    </View>
+                    <FlatList
+                        data={hastaliklar}
+                        renderItem={renderDisease}
+                        keyExtractor={(item, index) => index.toString()}
+                        ListEmptyComponent={
+                            <Text style={styles.detailText}>Hastalık bulunmamaktadır.</Text>
+                        }
+                    />
+                    <View style={styles.addDiseaseContainer}>
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Hastalık adı giriniz..."
+                            value={hastalikAdi}
+                            onChangeText={(text) => setHastalikAdi(text)}
+                        />
+                        <TouchableOpacity
+                            style={styles.addButton}
+                            onPress={handleHastalikEkle}>
+                            <Text style={styles.addButtonLabel}>EKLE</Text>
+                        </TouchableOpacity>
                     </View>
                 </View>
-            </ScrollView>
+
+                <View style={styles.detailBox}>
+                    <View style={styles.detailRow}>
+                        <Icon
+                            name="map-marker"
+                            size={20}
+                            color="#666"
+                            style={styles.icon}
+                        />
+                        <Text style={styles.detailTitle}>Adres</Text>
+                    </View>
+                    <Text style={styles.detailText}>{adres}</Text>
+                </View>
+            </View>
+
 
             <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
                 <Text style={styles.logoutButtonText}>ÇIKIŞ YAP</Text>

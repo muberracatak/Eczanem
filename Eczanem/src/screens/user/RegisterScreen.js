@@ -11,6 +11,7 @@ const RegisterScreen = ({ navigation }) => {
     const [address, setAddress] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [yas, setYas] = useState('');
 
     const handleLoginPress = () => {
         navigation.navigate('LoginScreen');
@@ -27,10 +28,13 @@ const RegisterScreen = ({ navigation }) => {
                 firstName,
                 lastName,
                 birthdate: formattedBirthdate,
+                password,
                 address,
                 email,
                 userId: user.uid,
-                role: 'hasta'
+                role: 'hasta',
+                fiyatlar: '',
+                fiyatGonderenEczaci: ''
             };
             set(newUserRef, userData)
                 .then(() => {
@@ -49,11 +53,29 @@ const RegisterScreen = ({ navigation }) => {
             const day = formattedInput.slice(0, 2);
             const month = formattedInput.slice(2, 4);
             const year = formattedInput.slice(4);
-            formattedInput = `${day}.${month}.${year}`;
+            formattedInput = `${day}/${month}/${year}`;
         }
         return formattedInput;
     };
 
+    const calculateAge = birthdate => {
+        const today = new Date();
+        const birthdateArray = birthdate.split('/');
+        const birthMonth = parseInt(birthdateArray[1]) - 1;
+        const birthDay = parseInt(birthdateArray[0]);
+        const birthYear = parseInt(birthdateArray[2]);
+
+        let age = today.getFullYear() - birthYear;
+
+        if (
+            today.getMonth() < birthMonth ||
+            (today.getMonth() === birthMonth && today.getDate() < birthDay)
+        ) {
+            age--;
+        }
+
+        return age.toString() + ' Yaş';
+    };
     return (
         <View style={styles.container}>
             <Text style={styles.header}>Kayıt Ol</Text>

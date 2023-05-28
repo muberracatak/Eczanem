@@ -6,6 +6,7 @@ import { storage, db } from '../../components/config'
 import ActionButton from 'react-native-action-button';
 import Icon from 'react-native-vector-icons/Ionicons';
 import QRCode from 'react-native-qrcode-svg';
+import LottieView from 'lottie-react-native';
 
 
 const ImagePickerScreen = ({ navigation }) => {
@@ -13,6 +14,7 @@ const ImagePickerScreen = ({ navigation }) => {
     const [imageType, setImageType] = useState(null);
     const [imageUrl, setImageUrl] = useState(null);
     const [downloadURL, setDownloadURL] = useState(null);
+    const [success, setSuccess] = useState(false);
 
 
     const uploadImage = async (uri, type) => {
@@ -56,14 +58,21 @@ const ImagePickerScreen = ({ navigation }) => {
             }
         });
     };
+    const gonderildi = () => {
+        navigation.navigate('EczacilarListesi', { url: downloadURL })
+        setSuccess(true);
+    }
 
     const renderQRCode = () => {
+
+
         if (downloadURL) {
             return (
-                <View style={{ top: 10, left: 10 }}>
+                <View style={{ top: 200, left: 10 }}>
+
                     <QRCode value={downloadURL} size={200} />
                     <View style={{ top: 30 }}>
-                        <Button title='Eczacilara gonder' onPress={() => navigation.navigate('EczacilarListesi', { url: downloadURL })} />
+                        <Button title='Eczacilara gonder' onPress={gonderildi} />
                     </View>
                 </View>
             );
@@ -75,6 +84,13 @@ const ImagePickerScreen = ({ navigation }) => {
     return (
         <View style={styles.container}>
             {renderQRCode()}
+            <LottieView
+                autoPlay
+                style={{ height: 300, alignSelf: 'center', top: -160 }}
+                speed={1}
+                loop={true}
+                source={require('../../assets/recete.json')}
+            />
             <ActionButton buttonColor="#2e64e5" style={{ top: 500 }}>
                 <ActionButton.Item
                     buttonColor="#9b59b6"
