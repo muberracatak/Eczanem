@@ -9,7 +9,7 @@ import CheckBox from '@react-native-community/checkbox';
 const SiparisListesi = ({ navigation, route }) => {
     const [eczacilar, setEczacilar] = useState([]);
     const [kullanicilar, setKullanicilar] = useState([]);
-    const [modalVisible, setModalVisible] = useState(true);
+    const [modalVisible, setModalVisible] = useState(false);
     const [currentUser, setCurrentUser] = useState(null);
     const [checkedItems, setCheckedItems] = useState([]);
     const [inputValue, setInputValue] = useState('');
@@ -78,7 +78,7 @@ const SiparisListesi = ({ navigation, route }) => {
                 })
                     .then(() => {
                         alert('Sipariş fiyat bilgisi başarıyla gönderildi');
-                        navigation.navigate('BottomTab');
+
                     })
                     .catch((error) => {
                         console.log('Hata oluştu: ', error);
@@ -110,6 +110,7 @@ const SiparisListesi = ({ navigation, route }) => {
     return (
         <ScrollView>
             <View style={styles.container}>
+                <Text style={styles.title}>SİPARİŞLER</Text>
                 {filteredEczacilar.map((eczaci) => (
                     <View style={styles.eczaciContainer} key={eczaci.userId}>
                         {eczaci.qr ? (
@@ -117,12 +118,17 @@ const SiparisListesi = ({ navigation, route }) => {
                         ) : (
                             <Text></Text>
                         )}
-                        <CheckBox
-                            style={{ position: 'absolute', right: 10 }}
-                            value={checkedItems.includes(eczaci.gonderenKisi)}
-                            onValueChange={() => handleCheckboxToggle(eczaci)}
-                            tintColors={{ true: '#0066CC', false: '#C0C0C0' }}
-                        />
+                        {eczaci.qr ? (
+                            <CheckBox
+                                style={{ position: 'absolute', right: 10 }}
+                                value={checkedItems.includes(eczaci.gonderenKisi)}
+                                onValueChange={() => handleCheckboxToggle(eczaci)}
+                                tintColors={{ true: '#0066CC', false: '#C0C0C0' }}
+                            />
+                        ) : (
+                            <Text></Text>
+                        )}
+
                     </View>
                 ))}
                 <Modal
@@ -151,12 +157,19 @@ const SiparisListesi = ({ navigation, route }) => {
                                 }}
                                 value={inputValue}
                                 onChangeText={handleInputChange}
-                                placeholder="Enter a value"
+                                placeholder="Sipariş tutarını giriniz..."
                             />
+                            <View style={{ flexDirection: 'row', margin: 4 }}>
+                                <View style={{ margin: 4 }}>
+                                    <Button title="Gönder" onPress={handleSave} />
+                                </View>
 
-                            <Button title="Save" onPress={handleSave} />
+                                <View style={{ margin: 4 }}>
+                                    <Button title="İptal" onPress={handleCloseModal} />
+                                </View>
 
-                            <Button title="Cancel" onPress={handleCloseModal} />
+                            </View>
+
                         </View>
                     </View>
                 </Modal>
@@ -203,6 +216,17 @@ const styles = StyleSheet.create({
     soyadText: {
         fontSize: 14,
         color: '#333333',
+    },
+    title: {
+        fontSize: 30,
+        fontWeight: '800',
+        color: 'black',
+        alignSelf: 'center',
+        marginTop: 20,
+        marginBottom: 10,
+        letterSpacing: 2,
+        borderBottomWidth: 2,
+        borderBottomColor: '#0066CC',
     },
 });
 

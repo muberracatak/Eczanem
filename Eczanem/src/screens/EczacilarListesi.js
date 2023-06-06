@@ -87,9 +87,10 @@ const EczaciListesi = ({ navigation, route }) => {
                         <Text style={styles.avatarText}>{eczaci.firstName.charAt(0)}</Text>
                     </View>
                     <View style={styles.infoContainer}>
-                        <Text style={styles.adText}>{eczaci.pharmacyName}</Text>
-                        <Text style={styles.soyadText}>{eczaci.lastName}</Text>
+                        <Text style={styles.nameText}>{eczaci.pharmacyName}</Text>
+                        <Text style={styles.nameText}>{eczaci.lastName}</Text>
                     </View>
+
                     <CheckBox
                         style={{ position: 'absolute', right: 10 }}
                         value={checkedItems.includes(eczaci.userId)}
@@ -111,18 +112,32 @@ const styles = StyleSheet.create({
     eczaciContainer: {
         flexDirection: 'row',
         alignItems: 'center',
-        backgroundColor: '#e1e5ea',
+        backgroundColor: '#629DD9',
         borderRadius: 8,
         padding: 10,
         marginBottom: 10,
+        borderWidth: 1,
+        borderColor: '#E8E8E8',
+    },
+    userContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        backgroundColor: '#629DD9',
+        borderRadius: 8,
+        padding: 10,
+        marginBottom: 10,
+        borderWidth: 1,
+        borderColor: '#E8E8E8',
     },
     avatarContainer: {
-        backgroundColor: '#6c757d',
+        backgroundColor: '#629DD9',
         borderRadius: 25,
         width: 50,
         height: 50,
         justifyContent: 'center',
         alignItems: 'center',
+        borderWidth: 1
+
     },
     avatarText: {
         fontSize: 20,
@@ -130,6 +145,11 @@ const styles = StyleSheet.create({
     },
     infoContainer: {
         marginLeft: 10,
+    },
+    nameText: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        color: 'white'
     },
     adText: {
         fontSize: 16,

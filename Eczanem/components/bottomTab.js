@@ -32,7 +32,7 @@ function BottomTab({ route }) {
                 style={{
                     width: 60,
                     height: 60,
-                    backgroundColor: '#2634C0',
+                    // backgroundColor: '#2634C0',
                     justifyContent: 'center',
                     alignItems: 'center',
                     borderRadius: 33,
@@ -68,9 +68,11 @@ function BottomTab({ route }) {
                 name="Anasayfa"
                 component={Anasayfa}
                 options={{
+                    headerShown: false,
                     tabBarIcon: ({ color }) => (
                         <Entypo name="home" size={24} color={color} />
                     ),
+
                 }}
             />
 
@@ -78,25 +80,19 @@ function BottomTab({ route }) {
                 name="QR"
                 component={QrScreen}
                 options={{
+                    headerShown: false,
                     tabBarIcon: ({ color }) => (
                         <AntDesign name="qrcode" size={24} color={color} />
                     ),
                 }}
             />
 
-            <Tab.Screen
-                name="Home"
-                component={Home}
-                options={{
-                    tabBarIcon: ({ color }) => (
-                        <AntDesign name="qrcode" size={24} color={color} />
-                    ),
-                }}
-            />
+
             <Tab.Screen
                 name="list"
                 component={VoiceRecorder}
                 options={{
+                    headerShown: false,
                     tabBarButton: (props) => <CustomTabBarButton {...props} />,
                 }}
             />
@@ -104,6 +100,7 @@ function BottomTab({ route }) {
                 name="Kullanicilar"
                 component={Kullanicilar}
                 options={{
+                    headerShown: false,
                     tabBarIcon: ({ color }) => (
                         <Ionicons name="chatbubbles-sharp" size={24} color={color} />
                     ),
@@ -113,6 +110,7 @@ function BottomTab({ route }) {
                 name="Hesap"
                 component={Hesap}
                 options={{
+                    headerShown: false,
                     tabBarIcon: ({ color }) => (
                         <MaterialCommunityIcons name="account" size={24} color={color} />
                     ),

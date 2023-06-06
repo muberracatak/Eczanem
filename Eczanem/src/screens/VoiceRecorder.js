@@ -77,15 +77,7 @@ const VoiceRecorder = () => {
             console.log('audioPath', audioPath);
             console.log('Recording stopped');
 
-            // Send the recorded voice message to Firebase
-            // const storageRef = firebase.storage().ref();
-            // const voiceMessageRef = storageRef.child('voice_messages/message.wav');
 
-            // const response = await fetch(audioPath);
-            // const blob = await response.blob();
-
-            // await voiceMessageRef.put(blob);
-            // console.log('Voice message uploaded to Firebase');
         }
     };
 

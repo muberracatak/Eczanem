@@ -48,7 +48,7 @@ const StackNavigator = ({ navigation }) => {
                     <Stack.Screen
                         name="Chat"
                         component={Chat}
-                        options={{ headerShown: false }}
+                        options={{ headerShown: true }}
                     />
                     <Stack.Screen
                         name="Görüşme"

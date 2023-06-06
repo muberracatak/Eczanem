@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { db } from '../../../components/config';
 import { ref, onValue } from 'firebase/database';
 import CheckBox from '@react-native-community/checkbox';
-
+import Fontisto from 'react-native-vector-icons/Fontisto'
 const Kullanicilar = ({ navigation, route }) => {
     const [users, setUsers] = useState([]);
 
@@ -22,6 +22,7 @@ const Kullanicilar = ({ navigation, route }) => {
 
     return (
         <View style={styles.container}>
+            <Text style={styles.title}>ECZACILAR</Text>
             {users.map((user) => (
                 <TouchableOpacity
                     onPress={() =>
@@ -34,14 +35,11 @@ const Kullanicilar = ({ navigation, route }) => {
                     key={user.userId}
                 >
                     <View style={styles.avatarContainer}>
-                        <Image
-                            source={{ uri: user.avatarURL }}
-                            style={styles.avatarImage}
-                        />
+                        <Fontisto name='hipchat' size={30} color={'white'} />
                     </View>
                     <View style={styles.infoContainer}>
                         <Text style={styles.nameText}>{user.pharmacyName}</Text>
-                        <Text style={styles.lastNameText}>{user.lastName}</Text>
+
                     </View>
                 </TouchableOpacity>
             ))}
@@ -58,7 +56,7 @@ const styles = StyleSheet.create({
     userContainer: {
         flexDirection: 'row',
         alignItems: 'center',
-        backgroundColor: '#FFFFFF',
+        backgroundColor: '#629DD9',
         borderRadius: 8,
         padding: 10,
         marginBottom: 10,
@@ -66,7 +64,7 @@ const styles = StyleSheet.create({
         borderColor: '#E8E8E8',
     },
     avatarContainer: {
-        backgroundColor: '#CCCCCC',
+
         borderRadius: 25,
         width: 50,
         height: 50,
@@ -84,10 +82,21 @@ const styles = StyleSheet.create({
     nameText: {
         fontSize: 16,
         fontWeight: 'bold',
+        color: 'white'
     },
-    lastNameText: {
+    statusText: {
         fontSize: 14,
-        color: '#333333',
+        color: '#666666',
+    }, title: {
+        fontSize: 30,
+        fontWeight: '800',
+        color: 'black',
+        alignSelf: 'center',
+        marginTop: 20,
+        marginBottom: 10,
+        letterSpacing: 2,
+        borderBottomWidth: 2,
+        borderBottomColor: '#0066CC',
     },
 });
 

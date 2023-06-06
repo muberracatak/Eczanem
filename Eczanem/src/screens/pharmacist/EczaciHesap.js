@@ -15,8 +15,9 @@ const PharmacyProfile = () => {
         pharmacistName: 'Eczacı İsim',
         openingDays: 'Pazartesi - Cuma',
         openingHours: '09:00 - 18:00',
-        address: 'Eczane Adresi',
-        pharmacyImage: require('../../../assets/medicine-icon.png')
+        address: 'Fikirtepe Mahallesi, Volkan Sokak, 31-41A',
+        pharmacyImage: require('../../../assets/medicine-icon.png'),
+        yas: 67
     };
     const handleSignOut = () => {
         auth.signOut()
@@ -81,6 +82,7 @@ const PharmacyProfile = () => {
                         <View style={styles.topContainer}>
                             <Image style={styles.image} />
                             <Text style={styles.pharmacyName}>{eczaci.pharmacyName}</Text>
+
                             <View style={isOpen ? styles.openStatusOpen : styles.openStatusClosed}>
                                 <Text style={styles.openStatusText}>{isOpen ? 'AÇIK' : 'KAPALI'}</Text>
                             </View>
@@ -92,6 +94,7 @@ const PharmacyProfile = () => {
                                     <View>
                                         <Text style={styles.detailTitle}>Eczacı:</Text>
                                         <Text style={styles.detailText}>{eczaci.firstName}</Text>
+
                                     </View>
                                 </View>
                             </View>
@@ -100,7 +103,7 @@ const PharmacyProfile = () => {
                                     <Icon name="phone" size={16} color="#2196f3" style={styles.icon} />
                                     <View>
                                         <Text style={styles.detailTitle}>Telefon:</Text>
-                                        <Text style={styles.detailText}>{pharmacyData.phoneNumber}</Text>
+                                        <Text style={styles.detailText}>05341233212</Text>
                                     </View>
                                 </View>
                             </View>
